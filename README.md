@@ -7,6 +7,11 @@ a neovim comment and annotation plugin using coroutine.
 
 More filetype support and enhance
 
+- [x] go
+- [x] lua
+- [x] vim
+- [x] yaml
+
 ## Usage
 
 ```vim
