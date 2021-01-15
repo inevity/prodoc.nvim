@@ -111,8 +111,8 @@ function prodoc.generate_doc()
 end
 
 function prodoc.generate_command()
-  api.nvim_command('command! -range -bar ProDoc lua require("prodoc.prodoc").generate_doc()')
-  api.nvim_command('command! -range -bar ProComment lua require("prodoc.prodoc").generate_comment(<line1>,<line2>)')
+  api.nvim_command('command! -range -bar ProDoc lua require("prodoc").generate_doc()')
+  api.nvim_command('command! -range -bar ProComment lua require("prodoc").generate_comment(<line1>,<line2>)')
 end
 
 return prodoc
