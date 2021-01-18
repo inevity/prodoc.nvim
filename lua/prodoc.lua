@@ -1,5 +1,6 @@
 local vim,api = vim,vim.api
 local prodoc = {}
+local space = ' '
 
 local prefix = {
   yaml = '#',
@@ -24,10 +25,10 @@ local prefix_with_doc = function(pf,params)
   local doc_description = '@Description '
   local doc_param = '@Param '
 
-  table.insert(prefix_doc,pf .. ' ' .. doc_summary)
-  table.insert(prefix_doc,pf .. ' ' .. doc_description)
+  table.insert(prefix_doc,pf .. space .. doc_summary)
+  table.insert(prefix_doc,pf .. space .. doc_description)
   for _,v in ipairs(params) do
-    local p = pf .. ' ' .. doc_param .. ' ' .. v
+    local p = pf .. space .. doc_param .. space .. v
     table.insert(prefix_doc,p)
   end
 
@@ -47,10 +48,10 @@ local generate_line_comment = function(co)
       break
     end
     if _split(line,'%S+')[1] == comment_prefix then
-      local pre_line = line:gsub(comment_prefix..' ','',1)
-      vim.fn.setline(lnum,pre_line)
+      local pre_line = line:gsub(comment_prefix..space,'',1)
+      api.nvim_buf_set_line(0,lnum,lnum,{pre_line})
     else
-      vim.fn.setline(lnum,comment_prefix ..' '..line)
+      api.nvim_buf_set_line(0,lnum,lnum,{comment_prefix ..space..line})
     end
   end
 end
