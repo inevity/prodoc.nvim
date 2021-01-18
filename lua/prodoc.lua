@@ -49,9 +49,9 @@ local generate_line_comment = function(co)
     end
     if _split(line,'%S+')[1] == comment_prefix then
       local pre_line = line:gsub(comment_prefix..space,'',1)
-      api.nvim_buf_set_line(0,lnum,lnum,{pre_line})
+      api.nvim_buf_set_lines(0,lnum,lnum,{pre_line})
     else
-      api.nvim_buf_set_line(0,lnum,lnum,{comment_prefix ..space..line})
+      api.nvim_buf_set_lines(0,lnum,lnum,{comment_prefix ..space..line})
     end
   end
 end
