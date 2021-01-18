@@ -49,9 +49,9 @@ local generate_line_comment = function(co)
     end
     if _split(line,'%S+')[1] == comment_prefix then
       local pre_line = line:gsub(comment_prefix..space,'',1)
-      api.nvim_buf_set_lines(0,lnum,lnum,true,{pre_line})
+      api.nvim_buf_set_lines(0,lnum-1,lnum,true,{pre_line})
     else
-      api.nvim_buf_set_lines(0,lnum,lnum,true,{comment_prefix ..space..line})
+      api.nvim_buf_set_lines(0,lnum-1,lnum,true,{comment_prefix ..space..line})
     end
   end
 end
@@ -68,9 +68,9 @@ function prodoc.generate_comment(...)
   local comment_prefix = prefix[ft]
 
   local normal_mode = coroutine.create(function()
-    local pos = vim.fn.getpos('.')
+    local lnum = api.nvim_win_get_cursor(0)[1]
     local line = vim.fn.getline('.')
-    coroutine.yield(line,pos[2],comment_prefix)
+    coroutine.yield(line,lnum,comment_prefix)
   end)
 
   local visual_mode = coroutine.create(function()
@@ -97,16 +97,16 @@ end
 function prodoc.generate_doc()
   local ft = vim.bo.filetype
   local comment_prefix = prefix[ft]
-  local pos = vim.fn.getpos('.')
+  local lnum = api.nvim_win_get_cursor(0)[1]
   local line = vim.fn.getline('.')
   local content = _split(line,'%((.*)%)')
   local params = _split(content[1],'[^,%s]+')
   local doc = prefix_with_doc(comment_prefix,params)
 
   -- insert doc
-  vim.fn.append(pos[2]-1,doc)
+  vim.fn.append(lnum-1,doc)
   -- set curosr
-  vim.fn.cursor(pos[2],#doc[1]+#comment_prefix+1)
+  vim.fn.cursor(lnum,#doc[1]+#comment_prefix+1)
   -- enter into insert mode
   api.nvim_command('startinsert!')
 end
