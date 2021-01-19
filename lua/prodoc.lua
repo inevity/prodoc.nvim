@@ -2,21 +2,14 @@ local vim,api = vim,vim.api
 local prodoc = {}
 local space = ' '
 
-local prefix = {
-  yaml = '#',
-  go = '//',
-  lua = '--',
-  vim = '"',
-}
-
-do
-  local _preifx_metatable = {
-    __index = function(_,v)
-      error(string.format('The current filetype does not support %s',v))
-    end
-  }
-
-  setmetatable(prefix,_preifx_metatable)
+local prefix = function()
+  local ft = vim.bo.filetype
+  local has_lang,lang = pcall(require,'prodoc.'..ft)
+  if not has_lang then
+    error('Current filetype %s does not support')
+    return
+  end
+  return lang.prefix
 end
 
 local prefix_with_doc = function(pf,params)
@@ -64,8 +57,7 @@ function prodoc.generate_comment(...)
     return
   end
 
-  local ft = vim.bo.filetype
-  local comment_prefix = prefix[ft]
+  local comment_prefix = prefix()
 
   local normal_mode = coroutine.create(function()
     local lnum = api.nvim_win_get_cursor(0)[1]
@@ -96,10 +88,10 @@ end
 -- generate doc
 function prodoc.generate_doc()
   local ft = vim.bo.filetype
-  local comment_prefix = prefix[ft]
+  local comment_prefix = prefix()
   local lnum = api.nvim_win_get_cursor(0)[1]
   local line = vim.fn.getline('.')
-  local params = require('prodoc.'..ft).get_parmas(lnum,line,_split)
+  local params = require('prodoc.'..ft).get_params(lnum,line,_split)
 
   local doc = prefix_with_doc(comment_prefix,params)
 

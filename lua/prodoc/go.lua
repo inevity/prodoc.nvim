@@ -1,8 +1,7 @@
 local space = ' '
 local api = vim.api
-local go = {}
 
-function go.get_parmas(lnum,line,_split)
+local get_params = function(lnum,line,_split)
   local params = {}
   -- check the function and arguments in one line
   if line:sub(line.len(line),-1) ~= '(' then
@@ -31,4 +30,7 @@ function go.get_parmas(lnum,line,_split)
   return params
 end
 
-return go
+return {
+  prefix = '//',
+  get_params = get_params
+}
