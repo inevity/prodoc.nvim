@@ -1,6 +1,7 @@
 local vim,api = vim,vim.api
 local prodoc = {}
 local space = ' '
+local _split = require('prodoc.utils')._split
 
 local prefix = function()
   local ft = vim.bo.filetype
@@ -26,12 +27,6 @@ local prefix_with_doc = function(pf,params)
   end
 
   return prefix_doc
-end
-
-local _split = function(s,reg)
-  local split_table = {}
-  for word in s:gmatch(reg) do table.insert(split_table, word) end
-  return split_table
 end
 
 local generate_line_comment = function(co)

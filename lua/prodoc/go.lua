@@ -1,7 +1,8 @@
 local space = ' '
 local api = vim.api
+local _split = require('prodoc.utils')._split
 
-local get_params = function(lnum,line,_split)
+local get_params = function(lnum,line)
   local params = {}
   -- check the function and arguments in one line
   if line:sub(line.len(line),-1) ~= '(' then
