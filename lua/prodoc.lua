@@ -102,7 +102,7 @@ function prodoc.generate_doc()
   local params = {}
 
   -- check the function and arguments in one line
-  if not line:sub(line.len(line),-1) == '(' then
+  if line:sub(line.len(line),-1) ~= '(' then
     local content = _split(line,'%((.*)%)')
     params = _split(content[1],'[^,%s]+')
   else
