@@ -99,32 +99,7 @@ function prodoc.generate_doc()
   local comment_prefix = prefix[ft]
   local lnum = api.nvim_win_get_cursor(0)[1]
   local line = vim.fn.getline('.')
-  local params = {}
-
-  -- check the function and arguments in one line
-  if line:sub(line.len(line),-1) ~= '(' then
-    local content = _split(line,'%((.*)%)')
-    params = _split(content[1],'[^,%s]+')
-  else
-    local end_lnum = lnum
-    while true do
-      end_lnum = end_lnum + 1
-      -- find the last paren of wrap arguments then get line number
-      if api.nvim_buf_get_lines(0,end_lnum-1,end_lnum,true)[1]:sub(1,1) == ')' then
-        break
-      end
-    end
-
-    local wrap_arguments = api.nvim_buf_get_lines(0,lnum,end_lnum-1,true)
-    for _,arg in ipairs(wrap_arguments) do
-      local wrap_params = _split(arg,'[^,%s]+')
-      for idx,v in ipairs(wrap_params) do
-        if idx ~= #wrap_params then
-          table.insert(params,v .. space ..wrap_params[#wrap_params] )
-        end
-      end
-    end
-  end
+  local params = require('prodoc.'..ft).get_parmas(lnum,line,_split)
 
   local doc = prefix_with_doc(comment_prefix,params)
 
