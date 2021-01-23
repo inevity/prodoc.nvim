@@ -7,7 +7,25 @@ local get_params = function(lnum,line)
   -- check the function and arguments in one line
   if line:sub(line.len(line),-1) ~= '(' then
     local content = _split(line,'%((.*)%)')
-    params = _split(content[1],'[^,%s]+')
+    local param_content = _split(content[1],'[^,]+')
+    local var_name = {}
+    for _,value in ipairs(param_content) do
+      if value:find(' ',1) == nil then
+        table.insert(var_name,value)
+      else
+        if next(var_name) == nil then
+          local _rs_char,_ = value:gsub(' ','',1)
+          table.insert(params,_rs_char)
+        else
+          local var_with_type = _split(value,'%w+')
+          for _,p in ipairs(var_name) do
+            table.insert(params,p .. space ..var_with_type[2])
+          end
+          table.insert(params,var_with_type[1] ..space .. var_with_type[2])
+          var_name = {}
+        end
+      end
+    end
   else
     local end_lnum = lnum
     while true do
